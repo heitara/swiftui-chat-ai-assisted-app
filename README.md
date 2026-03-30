@@ -45,3 +45,9 @@ Ask me any question if you are uncertain for anything.
 ```
 I would like to be able to rename the chats from the chats screen. Please use swipe gesture and add a rename command. Once clicked use a pop up window to rename the chat.
 ```
+
+6. Let's add profile screen using `claude-code`.
+
+```
+Let's add user profile screen on which we can pick a profile image and set user's details. The default name should be "Noname". Once taping on the profile image an image picker should be displayed and the user should be able to pick an image. That image is cached locally and every next time when the app is started this image is used in any chats. It can be replaced from the profile page. Allow the user to pick different sumbols with varios background instead of image. This will be an alternative picker to the image picker.
+```
