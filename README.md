@@ -41,3 +41,7 @@ Ask me any question if you are uncertain for anything.
 3.3 Fix the problems with the code until you are able to start it in a simulater.
 
 4. Explore the result.
+5. Let's improve the project by adding a rename function to the chat list screen by using the standart swipe menu.
+```
+I would like to be able to rename the chats from the chats screen. Please use swipe gesture and add a rename command. Once clicked use a pop up window to rename the chat.
+```

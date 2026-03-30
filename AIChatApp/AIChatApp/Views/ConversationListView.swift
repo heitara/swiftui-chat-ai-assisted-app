@@ -6,6 +6,9 @@ struct ConversationListView: View {
     @Query(sort: \Conversation.updatedAt, order: .reverse) private var conversations: [Conversation]
 
     @State private var path = NavigationPath()
+    @State private var conversationToRename: Conversation?
+    @State private var showRenameDialog = false
+    @State private var renameText = ""
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -21,6 +24,20 @@ struct ConversationListView: View {
                         ForEach(conversations) { conversation in
                             NavigationLink(value: conversation) {
                                 ConversationRow(conversation: conversation)
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    delete(conversation: conversation)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                
+                                Button {
+                                    startRename(conversation: conversation)
+                                } label: {
+                                    Label("Rename", systemImage: "pencil")
+                                }
+                                .tint(.blue)
                             }
                         }
                         .onDelete(perform: delete)
@@ -40,6 +57,22 @@ struct ConversationListView: View {
             .navigationDestination(for: Conversation.self) { conversation in
                 ChatScreen(conversation: conversation)
             }
+            .alert("Rename Chat", isPresented: $showRenameDialog) {
+                TextField("Chat name", text: $renameText)
+                Button("Cancel", role: .cancel) {
+                    conversationToRename = nil
+                    renameText = ""
+                }
+                Button("Rename") {
+                    if let conversation = conversationToRename {
+                        renameConversation(conversation: conversation, newTitle: renameText)
+                    }
+                    conversationToRename = nil
+                    renameText = ""
+                }
+            } message: {
+                Text("Enter a new name for this chat")
+            }
         }
     }
 
@@ -54,6 +87,23 @@ struct ConversationListView: View {
         for index in offsets {
             context.delete(conversations[index])
         }
+        try? context.save()
+    }
+    
+    private func delete(conversation: Conversation) {
+        context.delete(conversation)
+        try? context.save()
+    }
+    
+    private func startRename(conversation: Conversation) {
+        conversationToRename = conversation
+        renameText = conversation.title
+        showRenameDialog = true
+    }
+    
+    private func renameConversation(conversation: Conversation, newTitle: String) {
+        conversation.title = newTitle
+        conversation.updatedAt = Date()
         try? context.save()
     }
 }
