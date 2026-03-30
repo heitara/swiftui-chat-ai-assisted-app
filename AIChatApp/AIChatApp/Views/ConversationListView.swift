@@ -9,6 +9,7 @@ struct ConversationListView: View {
     @State private var conversationToRename: Conversation?
     @State private var showRenameDialog = false
     @State private var renameText = ""
+    @State private var showProfile = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -46,12 +47,22 @@ struct ConversationListView: View {
             }
             .navigationTitle("Chats")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showProfile = true } label: {
+                        Image(systemName: "person.circle")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         createConversation()
                     } label: {
                         Image(systemName: "square.and.pencil")
                     }
+                }
+            }
+            .sheet(isPresented: $showProfile) {
+                NavigationStack {
+                    ProfileScreen()
                 }
             }
             .navigationDestination(for: Conversation.self) { conversation in

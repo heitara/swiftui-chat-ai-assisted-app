@@ -6,6 +6,7 @@ struct ChatScreen: View {
     let conversation: Conversation
 
     @Environment(\.modelContext) private var context
+    @Environment(UserProfile.self) private var profile
     @State private var viewModel: ChatViewModel?
 
     var body: some View {
@@ -30,10 +31,9 @@ struct ChatScreen: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if viewModel == nil {
-                let vm = ChatViewModel(conversation: conversation, context: context)
-                vm.onAppear()
-                viewModel = vm
+                viewModel = ChatViewModel(conversation: conversation, context: context, userProfile: profile)
             }
+            viewModel?.onAppear()
         }
     }
 }

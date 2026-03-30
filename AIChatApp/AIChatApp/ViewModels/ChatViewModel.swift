@@ -4,8 +4,7 @@ import ExyteChat
 
 @Observable
 final class ChatViewModel {
-    static let currentUser = User(id: "user",   name: "You",    avatarURL: nil, isCurrentUser: true)
-    static let aiUser      = User(id: "gemini", name: "Gemini", avatarURL: nil, isCurrentUser: false)
+    static let aiUser = User(id: "gemini", name: "Gemini", avatarURL: nil, isCurrentUser: false)
 
     var exyteMessages: [Message] = []
     var errorMessage: String?
@@ -13,17 +12,27 @@ final class ChatViewModel {
 
     private let conversation: Conversation
     private let context: ModelContext
+    private let userProfile: UserProfile
     private let service = GeminiService()
     private var isSending = false
 
-    init(conversation: Conversation, context: ModelContext) {
+    var currentUser: User {
+        User(id: "user",
+             name: userProfile.name,
+             avatarURL: userProfile.avatarURL,
+             avatarCacheKey: userProfile.avatarCacheKey,
+             isCurrentUser: true)
+    }
+
+    init(conversation: Conversation, context: ModelContext, userProfile: UserProfile) {
         self.conversation = conversation
         self.context = context
+        self.userProfile = userProfile
     }
 
     func onAppear() {
         let sorted = conversation.messages.sorted { $0.createdAt < $1.createdAt }
-        exyteMessages = sorted.map { Self.toExyteMessage($0) }
+        exyteMessages = sorted.map { toExyteMessage($0) }
     }
 
     func send(draft: DraftMessage) {
@@ -37,7 +46,7 @@ final class ChatViewModel {
         let userMsg = ChatMessage(role: "user", text: text, conversation: conversation)
         context.insert(userMsg)
         conversation.messages.append(userMsg)
-        exyteMessages.append(Self.toExyteMessage(userMsg))
+        exyteMessages.append(toExyteMessage(userMsg))
 
         // Set conversation title from first user message
         if conversation.title.isEmpty {
@@ -71,7 +80,7 @@ final class ChatViewModel {
                 context.insert(aiMsg)
                 conversation.messages.append(aiMsg)
                 conversation.updatedAt = Date()
-                exyteMessages.append(Self.toExyteMessage(aiMsg))
+                exyteMessages.append(toExyteMessage(aiMsg))
                 try context.save()
             } catch {
                 exyteMessages.removeAll { $0.id == "thinking" }
@@ -81,8 +90,8 @@ final class ChatViewModel {
         }
     }
 
-    private static func toExyteMessage(_ msg: ChatMessage) -> Message {
-        let user = msg.role == "user" ? currentUser : aiUser
+    private func toExyteMessage(_ msg: ChatMessage) -> Message {
+        let user = msg.role == "user" ? currentUser : Self.aiUser
         return Message(
             id: msg.id.uuidString,
             user: user,
