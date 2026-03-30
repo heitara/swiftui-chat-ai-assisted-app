@@ -63,3 +63,8 @@ npx skills add https://github.com/twostraws/swiftui-agent-skill --skill swiftui-
 
 8. Let's add some skills to `Xcode`.
 Read [more here](https://developer.apple.com/documentation/Xcode/setting-up-coding-intelligence#Customize-the-Codex-and-Claude-Agent-environments).
+
+9. Update `CLAUDE.md` if it's not synced. (use `claude-code`)
+```
+Please update the CLAUDE.md based on the new implementation in the Xcode project.
+```
