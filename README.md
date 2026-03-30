@@ -51,3 +51,15 @@ I would like to be able to rename the chats from the chats screen. Please use sw
 ```
 Let's add user profile screen on which we can pick a profile image and set user's details. The default name should be "Noname". Once taping on the profile image an image picker should be displayed and the user should be able to pick an image. That image is cached locally and every next time when the app is started this image is used in any chats. It can be replaced from the profile page. Allow the user to pick different sumbols with varios background instead of image. This will be an alternative picker to the image picker.
 ```
+
+7. Let's add some skills to `claude`.
+Nice Swift [Skills repo](https://github.com/twostraws/Swift-Agent-Skills).
+
+> You should have `NodeJS` and `npm` installed on your computer.
+
+```bash
+npx skills add https://github.com/twostraws/swiftui-agent-skill --skill swiftui-pro
+```
+
+8. Let's add some skills to `Xcode`.
+Read [more here](https://developer.apple.com/documentation/Xcode/setting-up-coding-intelligence#Customize-the-Codex-and-Claude-Agent-environments).
